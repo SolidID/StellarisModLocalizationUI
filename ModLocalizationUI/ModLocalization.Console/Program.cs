@@ -13,6 +13,12 @@ namespace ModLocalization.Console
             var baseCulture = "english";
             var targetCulture = "german";
 
+            if (args.Length >= 1)
+                baseCulture = args[0];
+
+            if (args.Length >= 2)
+                targetCulture = args[1];
+
             var modRepository = new ModRepository(@"App_Data");
 
             var modsWithoutGerman = modRepository
@@ -20,7 +26,7 @@ namespace ModLocalization.Console
                 .Where(it =>
                     it.LocalizationFiles.Count > 0
                     && !it.LocalizationFiles.Any(lf =>
-                        lf.FileName.Contains("german", StringComparison.OrdinalIgnoreCase)));
+                        lf.FileName.Contains(targetCulture, StringComparison.OrdinalIgnoreCase)));
 
             var zip = new ZipService();
 
