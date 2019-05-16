@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using ModLocalization.Core.Data;
 using ModLocalization.Core.Model;
+using System.Collections.ObjectModel;
 
 namespace ModLocalization.UI.Model
 {
-    internal static class ModSource
+    internal class ModSource
     {
-        public static IEnumerable<Mod> Mods { get; set; }
+        public string ModsLocation { get; set; } = @"C:\Games\Steam\steamapps\workshop\content\281990";
+        public ObservableCollection<Mod> Mods => new ObservableCollection<Mod>(new ModRepository(ModsLocation).GetAllMods());
     }
 }

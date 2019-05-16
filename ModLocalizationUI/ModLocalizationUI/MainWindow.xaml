@@ -3,31 +3,50 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ModLocalizationUI"
+        xmlns:model="clr-namespace:ModLocalization.UI.Model"
         mc:Ignorable="d"
-        Title="Stellaris - Mod Localization UI" Height="450" Width="800">
+        Title="Stellaris - Mod Localization UI" Height="450" Width="800" Padding="5"
+        >
     <Window.Resources>
+        <model:ModSource x:Key="ModSource" />
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto" MinHeight="41.891"></RowDefinition>
+            <RowDefinition Height="*" MinHeight="39.273"></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
 
-        <TextBlock Text="Found Mods:" Grid.Row="0"/>
-        <ListView HorizontalAlignment="Stretch" 
-                      VerticalAlignment="Stretch"
-                      Grid.Row="1" Grid.Column="0">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <!-- Row 0 -->
+        <Label Content="Location:" Grid.Row="0" Grid.Column="0" Margin="10,10,9.6,0" />
+        <TextBox Width="Auto" Grid.Row="0" Text="{Binding Source={StaticResource ModSource}, Path=ModsLocation}" Margin="73,10,110.309,9.891"/>
+        <Button Grid.Row="0" Content="Find it!" Width="100" HorizontalAlignment="Right" Margin="0,0,0.309,0.891"></Button>
+        <!-- /Row 0 -->
 
+        <!--Row 1-->
+        <Grid Grid.Row="1" Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="150" Width="250" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" MinHeight="41.891"></RowDefinition>
+                <RowDefinition Height="Auto" MinHeight="39.273"></RowDefinition>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Found Mods:" Grid.Column="0" Grid.Row="0" Margin="10,10.109,9.6,13.164" />
+
+            <ListView 
+                Grid.Column="0" 
+                Grid.Row="1" 
+                ItemsSource="{Binding Source={StaticResource ModSource}, Path=Mods}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Path=Name}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Left" Height="100" Margin="0.4,108.836,0,0" Grid.Row="1" VerticalAlignment="Top" Width="5"/>
+        </Grid>
     </Grid>
 </Window>

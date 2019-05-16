@@ -1,5 +1,8 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using ModLocalization.Core;
+using ModLocalization.Core.Data;
 
 namespace ModLocalization.Console
 {
@@ -7,7 +10,37 @@ namespace ModLocalization.Console
     {
         static void Main(string[] args)
         {
-            "Hello World".Dump();
+            var baseCulture = "english";
+            var targetCulture = "german";
+
+            var modRepository = new ModRepository(@"App_Data");
+
+            var modsWithoutGerman = modRepository
+                .GetAllMods()
+                .Where(it =>
+                    it.LocalizationFiles.Count > 0
+                    && !it.LocalizationFiles.Any(lf =>
+                        lf.FileName.Contains("german", StringComparison.OrdinalIgnoreCase)));
+
+            var zip = new ZipService();
+
+            foreach (var mod in modsWithoutGerman)
+            {
+                System.Console.WriteLine("--------------");
+                System.Console.WriteLine($"{mod.ID} - {mod.Name}");
+                foreach (var localizationFile in mod.LocalizationFiles)
+                {
+                    System.Console.WriteLine($"\t{localizationFile.FileName}");
+                }
+
+                var tempFolder = Path.Combine(Path.GetDirectoryName(mod.Location), "temp");
+                zip.Extract(mod.Location, tempFolder);
+                new TranslationService().Multiply(tempFolder, baseCulture, new []{targetCulture});
+                zip.Compress(tempFolder, mod.Location, ZipService.CompressMode.Backup);
+
+                Directory.Delete(tempFolder, true);
+                System.Console.WriteLine("--------------");
+            }
         }
     }
 }
