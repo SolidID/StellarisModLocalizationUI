@@ -19,7 +19,11 @@ namespace ModLocalization.Console
             if (args.Length >= 2)
                 targetCulture = args[1];
 
-            var modRepository = new ModRepository(@"App_Data");
+            var basePath = ".";
+            if (args.Length >= 3)
+                basePath = args[2];
+
+            var modRepository = new ModRepository(@basePath);
 
             var modsWithoutGerman = modRepository
                 .GetAllMods()
